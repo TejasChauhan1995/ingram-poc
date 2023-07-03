@@ -1,59 +1,76 @@
-import { LightningElement } from 'lwc';
-import { getBarcodeScanner } from 'lightning/mobileCapabilities';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { LightningElement, track } from 'lwc';
+import Quagga from 'quagga';
+
 export default class App extends LightningElement {
-      scannedBarcode = ''; 
+    @track isCameraOpen = false;
+    @track isReady = false; 
+    cameraStream;
+    videoElement;
+    wrapperElement;
+    barcodeIds = [];
+    serialNumber = 0;
 
-    /**
-     * When component is initialized, detect whether to enable Scan button
-     */
-    connectedCallback() {
-        this.myScanner = getBarcodeScanner(); 
-    }
-
-    /**
-     * Method executed on click of Barcode scan button
-     * @param event 
-     */
-    handleBarcodeClick(event){ 
-        if(this.myScanner.isAvailable()) {
-            
-            const scanningOptions = {
-                barcodeTypes: [this.myScanner.barcodeTypes.QR, 
-                                this.myScanner.barcodeTypes.UPC_E,
-                                this.myScanner.barcodeTypes.EAN_13,
-                                this.myScanner.barcodeTypes.CODE_39 ],
-                instructionText: 'Scan a QR , UPC , EAN 13, Code 39',
-                successText: 'Scanning complete.'
-            }; 
-            this.myScanner.beginCapture(scanningOptions)
-            .then((result) => { 
-                this.scannedBarcode = result.value;  
-            })
-            .catch((error) => { 
-                this.showError('error',error);
-            })
-            .finally(() => {
-                this.myScanner.endCapture();
-            }); 
+handleScanClick() {
+let trg =this.template.querySelector('div');
+        let config = {
+            inputStream: {
+              type: 'LiveStream',
+              constraints: {
+                width: { min: 640 },
+                height: { min: 480 },
+                aspectRatio: { min: 1, max: 100 },
+                facingMode: 'environment' // Use the rear camera for mobile devices
+              },
+              target: trg // ID of the container to display the camera stream
+            },
+            decoder: {
+              readers: ['code_128_reader', 'ean_reader', 'ean_8_reader', 'code_39_reader', 'code_39_vin_reader', 'codabar_reader', 'upc_reader', 'upc_e_reader', 'i2of5_reader', '2of5_reader', 'code_93_reader'],
+            },
+            locate: true
+          };
+          try{
+            console.log('Quagga >>>> ', Quagga);
+          Quagga.init(config, function (err) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            Quagga.start();
+          });
+          Quagga.onDetected(this.handleBarcodeDetected);
+         /* Quagga.onDetected(function (result) { 
+            console.log('Code decoded >>>>>> ',result.codeResult.code);
+          });*/
+        }catch(error){
+            console.log(error);
         }
-        else {
-            this.showError('Error','Scanner not supported on this device');
+       
+    }
+  
+    handleBarcodeDetected = (result) => {
+        const barcodeId = result.codeResult.code;
+        const barcodeDetail = { SrNo: '', BarcodeID: '' }; // Corrected variable name
+        barcodeDetail.SrNo = this.serialNumber + 1;
+        barcodeDetail.BarcodeID = barcodeId;
+        this.barcodeIds.push(barcodeDetail);
+        this.isReady = true;
+        this.isCameraOpen = true;
+        console.log(this.barcodeIds);
+        
+    }
+
+    handleCompleteClick() {
+        if (this.barcodeIds.length > 0) {
+            //this.isCameraOpen = false;
+            this.isReady = true;
+            this.isScanAgain = true; // Added this line
         }
+        //Quagga.stop();
+     
     }
-
-    /**
-     * Utility method to show error message
-     * @param  title 
-     * @param  msg 
-     */
-    showError(title,msg) {
-        const event = new ShowToastEvent({
-            title: title,
-            message: msg,
-            error : 'error'
-        });
-        this.dispatchEvent(event);
+    handleSubmitClick() {
+        // Submit logic here
+        Quagga.stop();
+        console.log('Submit button clicked!');
     }
-
 }

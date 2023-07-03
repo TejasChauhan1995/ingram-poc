@@ -1,42 +1,62 @@
 <template>
-    <lightning-card  variant="Narrow"  title="Barcode Scanner" icon-name="standard:account">
-        <div class="slds-card">
-        <div class="slds-box">
-            <lightning-button variant="brand" label="Begin Barcode Scan" title="Begin Barcode Scan" 
-                onclick={handleBarcodeClick} class="slds-m-left_x-small"> 
-            </lightning-button>
-            <p class="slds-m-left_x-small"> 
-                {scannedBarcode}
-            </p>
-        </div> 
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <div class="container">
+        <div class="Back">
+           
+            <div class="back-actions">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled">
+                    <img src="./resources/back.png" alt="Back Icon" class="back-icon">
+                </button>
+            </div>
+        </div>
+        <div class="profile">
+           
+            <div class="profile-actions">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled">
+                    <img src="./resources/profile.png" alt="Profile Image" class="profile-image">
+                </button>
+                <span class="profile-name">Gajraj Thaakurr</span>
+            </div>
+        </div>
     </div>
-    </lightning-card>
-   
+    
+<br>
+<br>
+    <div> Scanner
+    </div>
+
+    <template if:false={isCameraOpen}>
+        <button class="slds-button slds-button_brand" onclick={handleScanClick} >Scan</button>
+    </template>
+    <template if:true={isReady}>
+        <br/>
+        <table class="slds-table slds-table_cell-buffer">
+            <thead>
+                <tr>
+                    <th scope="col">Sr. No</th>
+                    <th scope="col">Barcode ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={barcodeIds} for:item="barcode" for:index="index">
+                    <tr key={barcode.SrNo}>
+                        <td>{barcode.SrNo}</td>
+                        <td>{barcode.BarcodeID}</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+        <br/>
+        <div class="center-align">
+            <button class="slds-button slds-button_brand" onclick={handleSubmitClick}>Complete</button>
+        </div>
+        
+    </template>
+    Search
+        <i class="fa fa-search" aria-hidden="true"></i>
+        Scan<i class="fa-sharp fa-solid fa-barcode-scan"></i>
+        history
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        Saved
+        <i class="fa-light fa-star"></i>
 </template>
-<!--
-<template>
-    <!-- LWC sample component <my-greeting> 
-    <div class="center greeting">
-        <!-- <my-greeting speed="slow"></my-greeting> 
-        <my-greeting speed="medium"></my-greeting>
-        <!-- <my-greeting speed="fast"></my-greeting> 
-    </div>
-
-    <div class="center">
-        <img src="./resources/lwc.png" />
-    </div>
-
-    <!-- Page code 
-    <div class="center">
-        <div class="container">
-            <!-- prettier-ignore 
-            <p class="info">
-                Edit <strong class="code">src/modules/my/app/app.html</strong>
-                <br />and save for live reload.
-            </p>
-        </div>
-        <div>
-            <a href="https://lwc.dev" class="link" target="_blank">Learn LWC</a>
-        </div>
-    </div>
-</template>  -->

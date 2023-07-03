@@ -1,24 +1,32 @@
 {
     "name": "ingram-poc",
     "version": "0.0.1",
-    "author": "Gajraj Thaakurr",
-    "bugs": "https://github.com/Gajraj Thaakurr/ingram-poc/issues",
+    "author": "TejasChauhan1995",
+    "bugs": "https://github.com/TejasChauhan1995/ingram-poc/issues",
     "dependencies": {
+        "@lwc/synthetic-shadow": "^3.0.0",
+        "@salesforce-ux/design-system": "^2.21.3",
+        "@salesforce/resource-url": "^0.0.3",
+        "@zxing/library": "^0.20.0",
         "compression": "^1.7.4",
         "express": "^4.18.2",
-        "helmet": "^7.0.0"
+        "font-awesome": "^4.7.0",
+        "helmet": "^7.0.0",
+        "javascript-barcode-reader": "^0.6.9",
+        "quagga": "^0.12.1",
+        "querystring": "^0.2.1"
     },
     "engines": {
-        "node": ">=10.13.0",
-        "npm": ">=6.4.1",
+        "node": "16.20.1",
+        "npm": "8.19.4",
         "yarn": ">=1.9.4"
     },
-    "homepage": "https://github.com/Gajraj Thaakurr/ingram-poc",
+    "homepage": "https://github.com/TejasChauhan1995/ingram-poc",
     "keywords": [
         "lwc"
     ],
     "license": "MIT",
-    "repository": "Gajraj Thaakurr/ingram-poc",
+    "repository": "TejasChauhan1995/ingram-poc",
     "scripts": {
         "build": "lwc-services build -m production",
         "build:development": "lwc-services build",
